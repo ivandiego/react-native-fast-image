@@ -39,13 +39,10 @@
 	self = [super init];
 	if (self) {
 		_staticUrls = [NSMutableSet new];
-		[[SDWebImageManager sharedManager] setCacheKeyFilter:^NSString * _Nullable(NSURL * _Nullable url) {
-			NSString *staticURLString = [[url staticURL] absoluteString];
-			if ([_staticUrls containsObject:staticURLString]) {
-				return staticURLString;
-			}
-			return url.absoluteString;
-		}];
+        SDWebImageManager.sharedManager.cacheKeyFilter =[SDWebImageCacheKeyFilter cacheKeyFilterWithBlock:^NSString * _Nullable(NSURL * _Nonnull url) {
+           url = [[NSURL alloc] initWithScheme:url.scheme host:url.host path:url.path];
+           return [url absoluteString];
+        }];
 	}
 	return self;
 }
